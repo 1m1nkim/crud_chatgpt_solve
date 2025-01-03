@@ -5,6 +5,8 @@ import com.mysite.sbb.Repository.PostRepository;
 import com.mysite.sbb.Service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +21,7 @@ public class PostContoller {
 
     private final PostService postService;
 
-    @GetMapping("")
-    public List<Post> findAll(){
-        return postService.getList();
-    }
+
 
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Long id){
@@ -49,5 +48,15 @@ public class PostContoller {
     @GetMapping("/title/{title}")
     public List<Post> searchTitle(@PathVariable("title") String title){
         return postService.searchTitle(title);
+    }
+
+    @GetMapping("/search")
+    public Page<Post> searchTitleWithPaging(@RequestParam("keyword") String keyword, Pageable pageable) {
+        return postService.searchTitleWithPaging(keyword, pageable);
+    }
+
+    @GetMapping("")
+    public Page<Post> getAllPosts(@RequestParam("page") int page) {
+        return postService.getAllPosts(page);
     }
 }

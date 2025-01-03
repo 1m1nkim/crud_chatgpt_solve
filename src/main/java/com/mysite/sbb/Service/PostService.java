@@ -4,6 +4,9 @@ import com.mysite.sbb.Entity.Post;
 import com.mysite.sbb.Repository.PostRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,4 +81,16 @@ public class PostService {
         }
         return posts;
     }
+
+    public Page<Post> searchTitleWithPaging(String keyword, Pageable pageable) {
+        return postRepository.findByTitleContaining(keyword, pageable);
+    }
+
+    public Page<Post> getAllPosts(int page) {
+        int pageSize = 3; // 고정된 페이지 크기
+        PageRequest pageable = PageRequest.of(page, pageSize);
+        return postRepository.findAll(pageable);
+    }
+    //페이지 처리는 고정된 크기로 할거면 페이지사이즈를 정해주고
+    // PageRequest에 값을 파라미터 페이지 값, pagesize 값을 정해주면 해당 페이지로 이동할 수 있게 해줌 
 }
