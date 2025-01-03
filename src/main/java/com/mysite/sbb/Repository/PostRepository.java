@@ -7,4 +7,5 @@ import java.util.List;
 
 @org.springframework.stereotype.Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
+    List<Post> findByTitleContaining(String keyword);
 }
