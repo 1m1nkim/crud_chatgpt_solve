@@ -40,9 +40,11 @@ public class PostService {
     public PostDto update(Long id, PostDto postDto, String username){
         Post post = postRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시물이 존재 x"));
+        if(!post.getAuthor().equals(username)){
+            throw new SecurityException("수정 권한 x");
+        }
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
-        post.setAuthor(username);
         Post updatePost = postRepository.save(post);
         return PostDto.of(updatePost);
     }

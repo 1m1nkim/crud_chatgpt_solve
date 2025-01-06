@@ -37,8 +37,8 @@ public class PostContoller {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER')") // ROLE_USER 권한 필요
-    public PostDto update(@PathVariable("id") Long id, @RequestBody PostDto postDto, Principal principal){
-        String username = principal.getName();
+    public PostDto update(@PathVariable("id") Long id, @RequestBody PostDto postDto, Principal principal) {
+        String username = principal.getName(); // 현재 로그인된 사용자 이름
         return postService.update(id, postDto, username);
     }
 
