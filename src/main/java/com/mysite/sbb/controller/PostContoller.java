@@ -1,17 +1,11 @@
 package com.mysite.sbb.controller;
 
-import com.mysite.sbb.Entity.Post;
-import com.mysite.sbb.Repository.PostRepository;
+import com.mysite.sbb.Dto.PostDto;
 import com.mysite.sbb.Service.PostService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 //이 부분만 수정 ㅇ
@@ -21,42 +15,28 @@ public class PostContoller {
 
     private final PostService postService;
 
-
+    @GetMapping("")
+    public List<PostDto> getAllPosts(){
+        return postService.getAllPosts();
+    }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Long id){
-        return postService.findIdContent(id);
+    public PostDto findById(@PathVariable("id") Long id){
+        return postService.findById(id);
     }
 
     @PostMapping("")
-    public Post create(@RequestBody @Valid Post post) {
-        return postService.create(post); // JSON 데이터를 Post 객체로 변환 후 저장
+    public PostDto create(@RequestBody PostDto postDto){
+        return postService.create(postDto);
     }
-
 
     @PutMapping("/{id}")
-    public Post update(@PathVariable("id") Long id, @RequestBody @Valid Post updatedPost) {
-        return postService.update(id, updatedPost);
-    }
-
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id){
-        postService.delete(id);
+    public PostDto update(@PathVariable("id") Long id, @RequestBody PostDto postDto){
+        return postService.update(id, postDto);
     }
 
     @GetMapping("/title/{title}")
-    public List<Post> searchTitle(@PathVariable("title") String title){
-        return postService.searchTitle(title);
-    }
-
-    @GetMapping("/search")
-    public Page<Post> searchTitleWithPaging(@RequestParam("keyword") String keyword, Pageable pageable) {
-        return postService.searchTitleWithPaging(keyword, pageable);
-    }
-
-    @GetMapping("")
-    public Page<Post> getAllPosts(@RequestParam("page") int page) {
-        return postService.getAllPosts(page);
+    public List<PostDto> searchByTitle(@PathVariable("title") String title){
+        return  postService.searchByTitle(title);
     }
 }
