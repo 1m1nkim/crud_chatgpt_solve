@@ -4,6 +4,9 @@ import com.mysite.sbb.Dto.PostDto;
 import com.mysite.sbb.Entity.Post;
 import com.mysite.sbb.Repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +17,12 @@ public class PostService {
     private final PostRepository postRepository;
 
     //전체 리스트
-    public List<PostDto> getAllPosts(){
-        List<Post> posts = postRepository.findAll();
-        return PostDto.fromEntity(posts);
+    public Page<PostDto> getAllPosts(int page){
+        int pageSize = 3;
+        Pageable pageable = PageRequest.of(page, pageSize);
+        //매개변수에 주입을 해주는게 아니라 현재 page와 pagesize를 받아서 반환시키기 
+        Page<Post> posts = postRepository.findAll(pageable);
+        return posts.map(PostDto::of);
     }
 
     //Id 검색 리스트

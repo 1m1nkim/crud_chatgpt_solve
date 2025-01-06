@@ -3,6 +3,8 @@ package com.mysite.sbb.controller;
 import com.mysite.sbb.Dto.PostDto;
 import com.mysite.sbb.Service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +20,8 @@ public class PostContoller {
 
     @GetMapping("")
     @PreAuthorize("hasRole('USER')") // ROLE_USER 권한 필요
-    public List<PostDto> getAllPosts(){
-        return postService.getAllPosts();
+    public Page<PostDto> getAllPosts(@RequestParam(name = "page", defaultValue = "0") int page){
+        return postService.getAllPosts(page);
     }
 
     @GetMapping("/{id}")
