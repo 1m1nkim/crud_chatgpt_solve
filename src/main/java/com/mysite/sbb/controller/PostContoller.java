@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -29,14 +30,16 @@ public class PostContoller {
 
     @PostMapping("")
     @PreAuthorize("hasRole('USER')") // ROLE_USER 권한 필요
-    public PostDto create(@RequestBody PostDto postDto){
-        return postService.create(postDto);
+    public PostDto create(@RequestBody PostDto postDto, Principal principal){
+        String username = principal.getName();
+        return postService.create(postDto, username);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER')") // ROLE_USER 권한 필요
-    public PostDto update(@PathVariable("id") Long id, @RequestBody PostDto postDto){
-        return postService.update(id, postDto);
+    public PostDto update(@PathVariable("id") Long id, @RequestBody PostDto postDto, Principal principal){
+        String username = principal.getName();
+        return postService.update(id, postDto, username);
     }
 
     @GetMapping("/title/{title}")

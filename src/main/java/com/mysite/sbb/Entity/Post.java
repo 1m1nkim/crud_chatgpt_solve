@@ -22,4 +22,7 @@ public class Post {
     @NotBlank(message = "게시물 내용은 필수입니다.")
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Column(nullable = false)
+    private String author;
 }

@@ -27,20 +27,22 @@ public class PostService {
     }
 
     //게시글 생성
-    public PostDto create(PostDto postDto) {
+    public PostDto create(PostDto postDto, String username) {
         Post post = Post.builder()
                 .title(postDto.getTitle())
                 .content(postDto.getContent())
+                .author(username)
                 .build();
         Post savedPost = postRepository.save(post);
         return PostDto.of(savedPost); // 저장된 엔티티 → DTO 변환
     }
 
-    public PostDto update(Long id, PostDto postDto){
+    public PostDto update(Long id, PostDto postDto, String username){
         Post post = postRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시물이 존재 x"));
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
+        post.setAuthor(username);
         Post updatePost = postRepository.save(post);
         return PostDto.of(updatePost);
     }

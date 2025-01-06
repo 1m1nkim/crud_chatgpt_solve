@@ -20,12 +20,14 @@ public class PostDto {
     private Long id;
     private String title;
     private String content;
+    private String author;
 
     public static PostDto of(Post post){
         return PostDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .author(post.getAuthor())
                 .build();
     }
 
