@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter @Setter
 //빌더 패턴을 추가하면 생성자가 자동으로 생성되지않아서  ~~Constructor를 추가해줘야함
@@ -25,4 +27,7 @@ public class Post {
 
     @Column(nullable = false)
     private String author;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 }

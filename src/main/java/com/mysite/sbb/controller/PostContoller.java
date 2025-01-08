@@ -1,6 +1,8 @@
 package com.mysite.sbb.controller;
 
+import com.mysite.sbb.Dto.CommentDto;
 import com.mysite.sbb.Dto.PostDto;
+import com.mysite.sbb.Service.CommentService;
 import com.mysite.sbb.Service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,11 +14,11 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-//이 부분만 수정 ㅇ
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
 public class PostContoller {
     private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping("")
     @PreAuthorize("hasRole('USER')") // ROLE_USER 권한 필요
@@ -48,5 +50,17 @@ public class PostContoller {
     @PreAuthorize("hasRole('USER')") // ROLE_USER 권한 필요
     public List<PostDto> searchByTitle(@PathVariable("title") String title){
         return postService.searchByTitle(title);
+    }
+
+    @GetMapping("/{id}/comments")
+    public List<CommentDto> getPostComments(@PathVariable Long id){
+        return commentService.getCommentsByPostId(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public void delete(@PathVariable("id") Long id, Principal principal){
+        String username = principal.getName();
+        postService.delete(id, username);
     }
 }

@@ -59,4 +59,12 @@ public class PostService {
         List<Post> posts = postRepository.findByTitleContaining(title);
         return PostDto.fromEntity(posts);
     }
+
+    public void delete(Long id, String username){
+        Post post = postRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("게시물  x"));
+        if(!post.getAuthor().equals(username)){
+            throw new SecurityException("삭제 권한 x");
+        }
+        postRepository.delete(post);
+    }
 }
