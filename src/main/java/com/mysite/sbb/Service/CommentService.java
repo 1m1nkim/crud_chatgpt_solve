@@ -6,6 +6,10 @@ import com.mysite.sbb.Entity.Post;
 import com.mysite.sbb.Repository.CommentRepository;
 import com.mysite.sbb.Repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,11 +39,29 @@ public class CommentService {
         return CommentDto.of(savedComment);
     }
 
-    public List<CommentDto> getCommentsByPostId(Long postId) {
+    public Page<CommentDto> getCommentsByPostId(Long postId, int page){
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException());
-        return post.getComments().stream().map(CommentDto::of).collect(Collectors.toList());
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+        List<CommentDto> comments = post.getComments()
+                .stream()
+                .map(CommentDto::of)
+                .collect(Collectors.toList());
+
+        Pageable pageable = PageRequest.of(page, 3);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), comments.size());
+
+        if(start >= comments.size()){
+            return new PageImpl<>(List.of(), pageable, comments.size());
+        }
+        return new PageImpl<>(comments.subList(start, end), pageable, comments.size());
     }
+
+//    public List<CommentDto> getCommentsByPostId(Long postId) {
+//        Post post = postRepository.findById(postId)
+//                .orElseThrow(() -> new IllegalArgumentException());
+//        return post.getComments().stream().map(CommentDto::of).collect(Collectors.toList());
+//    }
 
     public void deleteComment(Long id, Long commentId, String username) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("댓글  x "));

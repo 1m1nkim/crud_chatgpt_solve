@@ -4,6 +4,7 @@ import com.mysite.sbb.Dto.CommentDto;
 import com.mysite.sbb.Entity.Comment;
 import com.mysite.sbb.Service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +29,8 @@ public class CommentController {
 
 
     @GetMapping("/{postId}")
-    public List<CommentDto> getComments(@PathVariable("postId") Long postId){
-        return commentService.getCommentsByPostId(postId);
+    public Page<CommentDto> getComments(@PathVariable("postId") Long postId, @RequestParam(value = "page", defaultValue = "0") int page){
+        return commentService.getCommentsByPostId(postId, page);
     }
 
     @DeleteMapping("/{postId}/comments/{commentId}")

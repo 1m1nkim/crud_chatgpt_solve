@@ -22,19 +22,20 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() //인증 api는 누구나 접근 가능
+                        .requestMatchers("/api/auth/**").permitAll() // 인증 API는 누구나 접근 가능
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public InMemoryUserDetailsManager userDetailsManager(){
+    public InMemoryUserDetailsManager userDetailsManager() {
         UserDetails user = User.builder()
                 .username("user")
                 .password(passwordEncoder().encode("password"))
@@ -47,37 +48,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(csrf -> csrf.disable()) // CSRF 비활성화
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/post/**").authenticated() // 인증된 사용자만 접근
-//                        .anyRequest().permitAll() // 그 외는 모두 허용
-//                )
-//                .httpBasic(httpBasic -> {}); // HTTP Basic 인증 활성화
-//        return http.build();
-//    }
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder(); // 비밀번호 암호화
-//    }
-//
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsManager(PasswordEncoder passwordEncoder) {
-//        UserDetails user = User.builder()
-//                .username("user")
-//                .password(passwordEncoder.encode("password"))
-//                .roles("USER")
-//                .build();
-//
-//        UserDetails admin = User.builder()
-//                .username("admin")
-//                .password(passwordEncoder.encode("admin123"))
-//                .roles("ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user, admin);
-//    }
 }

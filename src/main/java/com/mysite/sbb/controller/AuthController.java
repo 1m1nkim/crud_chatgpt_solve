@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-import static com.mysite.sbb.JwtUtil.generateToken;
-
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) {
         if ("user".equals(username) && "password".equals(password)) {
