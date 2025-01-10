@@ -53,8 +53,8 @@ public class PostContoller {
     }
 
     @GetMapping("/{id}/comments")
-    public List<CommentDto> getPostComments(@PathVariable Long id){
-        return commentService.getCommentsByPostId(id);
+    public Page<CommentDto> getPostComments(@PathVariable Long id, @RequestParam(value = "page", defaultValue = "0") int page){
+        return commentService.getCommentsByPostId(id, page);
     }
 
     @DeleteMapping("/{id}")
