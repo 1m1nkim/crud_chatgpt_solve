@@ -14,8 +14,13 @@ import java.util.Map;
 public class AuthController {
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password){
-        if("user".equals(username) && "password".equals(password)){
+    public ResponseEntity<?> login(
+            @RequestParam(name = "username") String username,
+            @RequestParam(name = "password") String password
+    ) {
+        System.out.println("로그인 요청 - Username: " + username + ", Password: " + password);
+
+        if ("user".equals(username) && "password".equals(password)) {
             String accessToken = JwtUtil.generateToken(username, 30);
             String apiKey = JwtUtil.generateToken(username, 7 * 24 * 60);
 
@@ -25,13 +30,17 @@ public class AuthController {
                     .path("/")
                     .maxAge(7 * 24 * 60 * 60)
                     .build();
+
+            System.out.println("로그인 성공 - AccessToken: " + accessToken);
             return ResponseEntity.ok()
                     .header("Set-Cookie", cookie.toString())
                     .body(Map.of("accessToken", accessToken));
-        }else{
+        } else {
+            System.out.println("로그인 실패 - 잘못된 자격 증명");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
+
 
     @PostMapping("/refresh/token")
     public ResponseEntity<?> refreshToken(@CookieValue("apiKey") String apiKey){
