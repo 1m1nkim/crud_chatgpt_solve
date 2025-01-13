@@ -1,32 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import api from '../api'; // Axios 설정 파일을 import
-
-interface Post {
-    id: number;
-    title: string;
-    content: string;
-    author: string;
-}
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../api';
 
 const PostList: React.FC = () => {
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<any[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchPosts = async (): Promise<void> => {
+        const fetchPosts = async () => {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                alert('로그인이 필요합니다!');
+                navigate('/'); // 로그인 페이지로 이동
+                return;
+            }
+
             try {
                 const response = await api.get('/post', {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 });
                 setPosts(response.data.content);
-            } catch (error: any) {
+            } catch (error) {
                 console.error('게시물 가져오기 실패:', error);
+                alert('인증에 실패했습니다. 다시 로그인하세요.');
+                navigate('/');
             }
         };
 
         fetchPosts();
-    }, []);
+    }, [navigate]);
 
     return (
         <div>
